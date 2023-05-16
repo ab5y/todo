@@ -83,6 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun removeItem(todo: Todo) {
         todo.done = true
+        todo.finished_on = getDateTime()
         lifecycleScope.launch(Dispatchers.IO) {
             repository.updateTodo(todo)
         }

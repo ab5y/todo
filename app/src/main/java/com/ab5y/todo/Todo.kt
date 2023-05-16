@@ -10,5 +10,5 @@ data class Todo(
     @ColumnInfo(name = "text") val text: String?,
     @ColumnInfo(name = "done") var done: Boolean?,
     @ColumnInfo(name = "created_on") val created_on: String?,
-    @ColumnInfo(name = "finished_on") val finished_on: String?
+    @ColumnInfo(name = "finished_on") var finished_on: String?
 )
