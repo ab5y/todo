@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/app_name"
+        android:textColor="?attr/colorSecondary"
+        android:layout_weight="1"
+        android:textSize="34sp"
+        android:id="@+id/action_bar_title_tv"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="?attr/colorSecondary"
+        android:textSize="30sp"
+        android:padding="5dp"
+        android:text="@string/Date"
+        android:id="@+id/action_bar_date_tv" />
+</LinearLayout>

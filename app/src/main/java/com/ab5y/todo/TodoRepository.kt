@@ -11,8 +11,8 @@ class TodoRepository @Inject constructor(
     fun findByStatus(done: Boolean) = todoDao.findByStatus(done)
 
     @WorkerThread
-    suspend fun insert(todo: Todo) {
-        todoDao.insert(todo)
+    suspend fun insert(todo: Todo): Long {
+        return todoDao.insert(todo)
     }
 
     // By default Room runs suspend queries off the main thread, therefore, we don't need to
@@ -21,5 +21,10 @@ class TodoRepository @Inject constructor(
     @WorkerThread
     suspend fun updateTodo(todo: Todo) {
         todoDao.updateTodo(todo)
+    }
+
+    @WorkerThread
+    suspend fun deleteTodo(todo: Todo) {
+        todoDao.delete(todo)
     }
 }
