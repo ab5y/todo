@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Todo</string>
     <string name="Date">Jan 11 2023</string>
+    <string name="enter_task">Enter task</string>
+    <string name="add_task">Add Task</string>
+    <string name="share_button">Share button</string>
 </resources>

@@ -1,6 +1,9 @@
 package com.ab5y.todo
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -10,15 +13,20 @@ import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ab5y.todo.databinding.ActivityMainBinding
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -77,6 +85,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
                 return@setOnEditorActionListener true
             }
             false
+        }
+
+        binding.fabShare.setOnClickListener {
+            shareTodoList()
         }
 
         taskAdapter.onCheckListener = {
@@ -190,6 +202,52 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         val formattedDate = SimpleDateFormat("dd-MM-yyyy").format(Date())
         val formattedTime = SimpleDateFormat("HH:mm").format(Date())
         return "$formattedDate  $formattedTime"
+    }
+
+
+    private fun shareTodoList() {
+        shareTodoListAsImage(this, getRecyclerViewBitmap(binding.recyclerViewTasks))
+    }
+
+    private fun getRecyclerViewBitmap(recyclerView: RecyclerView): Bitmap {
+        val adapter = recyclerView.adapter
+        val layoutManager = recyclerView.layoutManager
+        val width = recyclerView.width
+        var height = 0
+
+        // Calculate the total height of the RecyclerView by measuring each item
+        for (i in 0 until (adapter?.itemCount ?: 0)) {
+            val itemView = layoutManager?.findViewByPosition(i)
+            height += itemView?.height ?: 0
+        }
+
+        // Create a bitmap with the calculated width and height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        recyclerView.draw(canvas)
+
+        return bitmap
+    }
+
+    private fun shareTodoListAsImage(context: Context, bitmap: Bitmap) {
+        try {
+            // Step 1: Convert the bitmap into a file
+            val file = File(context.cacheDir, "todo_list_image.png")
+            val outputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+
+            // Step 2: Create an intent to share the image
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.type = "image/*"
+            shareIntent.putExtra(Intent.EXTRA_STREAM, FileProvider.getUriForFile(context, "${context.packageName}.provider", file))
+
+            // Step 3: Start the activity chooser
+            val chooser = Intent.createChooser(shareIntent, "Share Todo List")
+            context.startActivity(chooser)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     override fun onResume() {
