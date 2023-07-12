@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             }
         }
 
-        binding.recyclerViewTasks.layoutManager = LinearLayoutManager(this)
+        binding.recyclerViewTasks.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewTasks.adapter = taskAdapter
 
         binding.buttonAddTask.setOnClickListener {
